@@ -126,6 +126,11 @@ func NewCode(code codes.Code, msg string) error {
 	return customError{errorType: ErrorType(code), originalError: errors.New(msg)}
 }
 
+// NewCodef creates an error by given gRPC Code and formatted message.
+func NewCodef(code codes.Code, msg string, args ...interface{}) error {
+	return customError{errorType: ErrorType(code), originalError: errors.New(fmt.Sprintf(msg, args...))}
+}
+
 // Wrap an error with a string
 func Wrap(err error, msg string) error {
 	return Wrapf(err, msg)

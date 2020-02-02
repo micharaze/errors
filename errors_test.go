@@ -5,6 +5,7 @@ import (
 
 	errors "github.com/raze92/errors"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc/codes"
 )
 
 func TestContext(t *testing.T) {
@@ -45,4 +46,12 @@ func TestWrapfInUnknownError(t *testing.T) {
 
 	assert.Equal(t, errors.Unknown, errors.GetType(wrappedError))
 	assert.EqualError(t, wrappedError, "error 1: an_error 2")
+}
+
+func TestNewCodeError(t *testing.T) {
+	err := errors.NewCode(codes.Unauthenticated, "error 1")
+	err2 := errors.NewCodef(codes.PermissionDenied, "error 2")
+
+	assert.Equal(t, errors.Unauthenticated, errors.GetType(err))
+	assert.Equal(t, errors.PermissionDenied, errors.GetType(err2))
 }
