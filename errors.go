@@ -121,6 +121,11 @@ func Newf(msg string, args ...interface{}) error {
 	return customError{errorType: Unknown, originalError: errors.New(fmt.Sprintf(msg, args...))}
 }
 
+// NewCode creates an error by given gRPC Code and message.
+func NewCode(code codes.Code, msg string) error {
+	return customError{errorType: ErrorType(code), originalError: errors.New(msg)}
+}
+
 // Wrap an error with a string
 func Wrap(err error, msg string) error {
 	return Wrapf(err, msg)
