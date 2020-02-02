@@ -101,6 +101,11 @@ func (errorType ErrorType) Code() codes.Code {
 	return codes.Code(errorType)
 }
 
+// CodeString converts ErrorType to gRPC Code string
+func (errorType ErrorType) CodeString() string {
+	return codes.Code(errorType).String()
+}
+
 // HTTP converts ErrorType to HTTP error code
 func (errorType ErrorType) HTTP() uint32 {
 	return httpMap[errorType]
