@@ -45,24 +45,29 @@ const (
 	DeadlineExceeded ErrorType = ErrorType(codes.DeadlineExceeded)
 )
 
-// Map for converting ErrorType to HTTP code
-var httpMap = map[ErrorType]uint32{
-	InvalidArgument:    400,
-	FailedPrecondition: 400,
-	OutOfRange:         400,
-	Unauthenticated:    401,
-	PermissionDenied:   403,
-	NotFound:           404,
-	Aborted:            409,
-	AlreadyExists:      409,
-	ResourceExhausted:  429,
-	Canceled:           499,
-	DataLoss:           500,
-	Unknown:            500,
-	Internal:           500,
-	Unimplemented:      501,
-	Unavailable:        503,
-	DeadlineExceeded:   504,
+type errorCode struct {
+	HTTP   uint32
+	String string
+}
+
+// Map for converting ErrorType to HTTP ore String code
+var httpMap = map[ErrorType]errorCode{
+	InvalidArgument:    errorCode{HTTP: 400, String: "INVALID_ARGUMENT"},
+	FailedPrecondition: errorCode{HTTP: 400, String: "FAILED_PRECONDITION"},
+	OutOfRange:         errorCode{HTTP: 400, String: "OUT_OF_RANGE"},
+	Unauthenticated:    errorCode{HTTP: 401, String: "UNAUTHENTICATED"},
+	PermissionDenied:   errorCode{HTTP: 403, String: "PERMISSION_DENIED"},
+	NotFound:           errorCode{HTTP: 404, String: "NOT_FOUND"},
+	Aborted:            errorCode{HTTP: 409, String: "ABORTED"},
+	AlreadyExists:      errorCode{HTTP: 409, String: "ALREADY_EXISTS"},
+	ResourceExhausted:  errorCode{HTTP: 429, String: "RESOURCE_EXHAUSTED"},
+	Canceled:           errorCode{HTTP: 499, String: "CANCELLED"},
+	DataLoss:           errorCode{HTTP: 500, String: "DATA_LOSS"},
+	Unknown:            errorCode{HTTP: 500, String: "UNKNOWN"},
+	Internal:           errorCode{HTTP: 500, String: "INTERNAL"},
+	Unimplemented:      errorCode{HTTP: 501, String: "UNIMPLEMENTED"},
+	Unavailable:        errorCode{HTTP: 503, String: "UNAVAILABLE"},
+	DeadlineExceeded:   errorCode{HTTP: 504, String: "DEADLINE_EXCEEDED"},
 }
 
 type customError struct {
@@ -101,20 +106,20 @@ func (errorType ErrorType) Code() codes.Code {
 	return codes.Code(errorType)
 }
 
-// CodeString converts ErrorType to gRPC Code string
-func (errorType ErrorType) CodeString() string {
-	return codes.Code(errorType).String()
+// String converts ErrorType to gRPC Code string
+func (errorType ErrorType) String() string {
+	return httpMap[errorType].String
 }
 
 // HTTP converts ErrorType to HTTP error code
 func (errorType ErrorType) HTTP() uint32 {
-	return httpMap[errorType]
+	return httpMap[errorType].HTTP
 }
 
 // Extensions returns extension messages of a customError for GraphQl gqlerrors.ExtendedError implementation
 func (err customError) Extensions() map[string]interface{} {
 	return map[string]interface{}{
-		"code": err.errorType.CodeString(),
+		"code": err.errorType.String(),
 	}
 }
 
