@@ -3,7 +3,7 @@ package errors_test
 import (
 	"testing"
 
-	errors "github.com/raze92/errors"
+	errors "github.com/micharaze/errors"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 )

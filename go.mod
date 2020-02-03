@@ -1,4 +1,4 @@
-module github.com/raze92/errors
+module github.com/micharaze/errors
 
 go 1.13
 
