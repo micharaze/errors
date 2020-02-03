@@ -111,6 +111,13 @@ func (errorType ErrorType) HTTP() uint32 {
 	return httpMap[errorType]
 }
 
+// Extensions returns extension messages for GraphQl gqlerrors.ExtendedError implementation
+func (errorType ErrorType) Extensions() map[string]interface{} {
+	return map[string]interface{}{
+		"code": errorType.CodeString(),
+	}
+}
+
 // Error returns the mssage of a customError
 func (error customError) Error() string {
 	return error.originalError.Error()
